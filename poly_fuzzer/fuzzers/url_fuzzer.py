@@ -102,9 +102,9 @@ def test_urlParse_without_grammar_and_powerSchedule(test_module):
              AbstractSeed("www.linkedin.com"), AbstractSeed("www.slack.com")]
     fuzzer = UrlFuzzer(executor, seeds, powerSchedule)
     output = fuzzer.run_fuzzer(budget=200)
-    print(output)
 
     assert output is not None
+    return output
 
 def test_urlParse_with_grammar_no_powerSchedule(test_module):
 
@@ -147,9 +147,9 @@ def test_urlParse_with_grammar_no_powerSchedule(test_module):
         print(seed.data)
     fuzzer = UrlFuzzer(executor, seeds)
     output = fuzzer.run_fuzzer(budget=200)
-    print(output)
-    assert output is not None
 
+    assert output is not None
+    return output
 
 def test_urlParse_with_grammar_with_powerSchedule(test_module):
 
@@ -193,9 +193,9 @@ def test_urlParse_with_grammar_with_powerSchedule(test_module):
         print(seed.data)
     fuzzer = UrlFuzzer(executor, seeds, powerSchedule)
     output = fuzzer.run_fuzzer(budget=200)
-    print(output)
-    assert output is not None
 
+    assert output is not None
+    return output
 
 
 def test_htmlParse_without_grammar_and_powerSchedule(test_module):
@@ -207,8 +207,82 @@ def test_htmlParse_without_grammar_and_powerSchedule(test_module):
              AbstractSeed("<html><head><title><ul>List</ul>"), AbstractSeed("<html><li>item</li>")]
     fuzzer = UrlFuzzer(executor, seeds, powerSchedule)
     output = fuzzer.run_fuzzer(budget=500)
-    print(output)
 
     assert output is not None
+    return output
+
+def test_htmlParse_with_grammar_no_powerSchedule(test_module):
+
+    executor = AbstractExecutor(test_module)
+    gram_html_dict =  {
+            "<start>": ["<html>"],
+            "<html>": ["<head><body>"],
+            "<head>": ["<title><meta>"],
+            "<title>": ["<title-tag>"],
+            "<title-tag>": ["<title-content>"],
+            "<title-content>": ["Hello World"],
+            "<meta>": ['<meta-tag>'],
+            "<meta-tag>": ['<meta-content>'],
+            "<meta-content>": ['<meta-charset>'],
+            "<meta-charset>": ['utf-8'],
+            "<body>": ["<header><main><footer>"],
+            "<header>": ["<header-tag>"],
+            "<header-tag>": ["<header-content>"],
+            "<header-content>": ["<h1>Welcome</h1>"],
+            "<main>": ["<main-tag>"],
+            "<main-tag>": ["<main-content>"],
+            "<main-content>": ["<p>This is the main content</p>"],
+            "<footer>": ["<footer-tag>"],
+            "<footer-tag>": ["<footer-content>"],
+            "<footer-content>": ["<p>Footer content goes here</p>"]
+            }
+    grammar = AbstractGrammar(gram_html_dict)
+    seeds = []
+    for i in range(10):
+        seeds.append(AbstractSeed(grammar.generate_input()))
+    for seed in seeds:
+        print(seed.data)
+    fuzzer = UrlFuzzer(executor, seeds)
+    output = fuzzer.run_fuzzer(budget=200)
+
+    assert output is not None
+    return output
 
 
+def test_htmlParse_with_grammar_with_powerSchedule(test_module):
+
+    executor = AbstractExecutor(test_module)
+    gram_html_dict =  {
+            "<start>": ["<html>"],
+            "<html>": ["<head><body>"],
+            "<head>": ["<title><meta>"],
+            "<title>": ["<title-tag>"],
+            "<title-tag>": ["<title-content>"],
+            "<title-content>": ["Hello World"],
+            "<meta>": ['<meta-tag>'],
+            "<meta-tag>": ['<meta-content>'],
+            "<meta-content>": ['<meta-charset>'],
+            "<meta-charset>": ['utf-8'],
+            "<body>": ["<header><main><footer>"],
+            "<header>": ["<header-tag>"],
+            "<header-tag>": ["<header-content>"],
+            "<header-content>": ["<h1>Welcome</h1>"],
+            "<main>": ["<main-tag>"],
+            "<main-tag>": ["<main-content>"],
+            "<main-content>": ["<p>This is the main content</p>"],
+            "<footer>": ["<footer-tag>"],
+            "<footer-tag>": ["<footer-content>"],
+            "<footer-content>": ["<p>Footer content goes here</p>"]
+            }
+    grammar = AbstractGrammar(gram_html_dict)
+    seeds = []
+    powerSchedule = HtmlPowerSchedule()
+    for i in range(10):
+        seeds.append(AbstractSeed(grammar.generate_input()))
+    for seed in seeds:
+        print(seed.data)
+    fuzzer = UrlFuzzer(executor, seeds, powerSchedule)
+    output = fuzzer.run_fuzzer(budget=200)
+
+    assert output is not None
+    return output

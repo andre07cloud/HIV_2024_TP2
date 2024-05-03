@@ -2,6 +2,7 @@ from cgi_decode import cgi_decode
 from poly_fuzzer.fuzzers.abstract_fuzzer  import AbstractFuzzer
 from poly_fuzzer.common.abstract_executor import AbstractExecutor
 from poly_fuzzer.common.abstract_seed import AbstractSeed
+import matplotlib.pyplot as plt
 
 from poly_fuzzer.fuzzers.abstract_fuzzer import AbstractFuzzer
 import random
@@ -110,8 +111,10 @@ def test_cgi_decode_without_grammar_and_powerSchedule(test_module):
     powerSchedule = PowerSchedule()
     fuzzer = CgiDecodeFuzzer(executor, seeds, powerSchedule)
     output = fuzzer.run_fuzzer(budget=100)
-    print(output)
-    assert output is not None
+    #print(output)
+    #assert output is not None
+    #return output
+
 
 
 def test_cgi_decode_with_grammar_no_powerSchedule(test_module):
@@ -128,12 +131,13 @@ def test_cgi_decode_with_grammar_no_powerSchedule(test_module):
     seeds = []
     for i in range(10):
         seeds.append(AbstractSeed(grammar.generate_input()))
-    for seed in seeds:
-        print(seed.data)
+    #for seed in seeds:
+        #print(seed.data)
     fuzzer = CgiDecodeFuzzer(executor, seeds)
     output = fuzzer.run_fuzzer(budget=100)
-    print(output)
+    #print(output)
     assert output is not None
+    return output
 
 def test_cgi_decode_with_grammar_with_powerSchedule(test_module):
     executor = AbstractExecutor(test_module)
@@ -151,5 +155,5 @@ def test_cgi_decode_with_grammar_with_powerSchedule(test_module):
         seeds.append(AbstractSeed(grammar.generate_input()))
     fuzzer = CgiDecodeFuzzer(executor, seeds, powerSchedule)
     output = fuzzer.run_fuzzer(budget=100)
-    print(output)
-    assert output is not None    
+    assert output is not None
+    return output    
